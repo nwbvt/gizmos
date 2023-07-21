@@ -12,12 +12,19 @@
   ::change-page
   (fn [db [_ new-page]]
     (println "On page" new-page)
-    (assoc db ::current-page new-page)))
+    (assoc db ::show-page new-page)))
+
+(rf/reg-sub
+  ::show-page
+  (fn [db]
+    (::show-page db)))
 
 (defn main
   []
-  [:div
-   (gizmos/pager 10 ::change-page)])
+  [:section.section
+   [:div.container
+    (gizmos/pager 10 ::change-page)
+    [:h1.title "On Page " @(rf/subscribe [::show-page])]]])
 
 (defn ^:dev/after-load mount-root []
   (rf/clear-subscription-cache!)
