@@ -1,5 +1,5 @@
 node_modules/
-public/js
+resources/public/js
 
 /target
 /checkouts
@@ -18,3 +18,4 @@ pom.xml.asc
 
 .hgignore
 .hg/
+
