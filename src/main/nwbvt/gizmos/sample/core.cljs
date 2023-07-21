@@ -6,24 +6,18 @@
 (rf/reg-event-fx
   ::initialize-db
   (fn [cfx event]
-    {:db {::current-page 0}}))
-
-(rf/reg-sub
-  ::current-page
-  (fn [db]
-    (::current-page db)))
+    {:db {}}))
 
 (rf/reg-event-db
-  ::gizmos/change-page
+  ::change-page
   (fn [db [_ new-page]]
+    (println "On page" new-page)
     (assoc db ::current-page new-page)))
 
 (defn main
   []
   [:div
-   (gizmos/pager
-     @(rf/subscribe [::current-page])
-     10)])
+   (gizmos/pager 10 ::change-page)])
 
 (defn ^:dev/after-load mount-root []
   (rf/clear-subscription-cache!)
