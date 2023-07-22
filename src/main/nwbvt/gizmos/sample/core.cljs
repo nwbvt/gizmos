@@ -6,7 +6,7 @@
 (rf/reg-event-fx
   ::initialize-db
   (fn [cfx event]
-    {:db {}}))
+    {:db {::show-page 0}}))
 
 (rf/reg-event-db
   ::change-page
