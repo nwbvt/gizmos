@@ -6,7 +6,7 @@
 (rf/reg-event-fx
   ::initialize-db
   (fn [cfx event]
-    {:db {}}))
+    {:db {::show-page 0}}))
 
 (rf/reg-event-db
   ::change-page
@@ -19,12 +19,38 @@
   (fn [db]
     (::show-page db)))
 
+(rf/reg-event-fx
+  ::close-my-modal
+  (fn [_ _]
+    (println "Modal closed")
+    {}))
+
 (defn main
   []
   [:section.section
    [:div.container
-    (gizmos/pager 10 ::change-page)
-    [:h1.title "On Page " @(rf/subscribe [::show-page])]]])
+    [:div.columns
+     [:div.column.is-one-third.has-text-centered
+      [:section.hero>div.hero-body
+       [:p.title "Pager"]
+       [:p.subtitle "A simple paging device"]]
+      [:p.is-family-code
+       "(gizmos/pager 10 ::change-page)"]
+      [:br]
+      [:div
+       (gizmos/pager 10 ::change-page)
+       [:section.hero>div.hero-body>p.title "On Page " @(rf/subscribe [::show-page])]]]
+     [:div.column.is-one-third.has-text-centered
+      [:section.hero>div.hero-body
+       [:p.title "Modal"]
+       [:p.subtitle "A popup modal"]]
+      [:br]
+      (gizmos/modal ::my-modal
+                    :title "My Modal"
+                    :body [:div "This is a modal"]
+                    :footer [:button.button.is-primary {:on-click #(gizmos/close-modal ::my-modal)} "Close"]
+                    :on-close ::close-my-modal)
+      [:button.button {:on-click #(gizmos/launch-modal ::my-modal)} "Launch Modal"]]]]])
 
 (defn ^:dev/after-load mount-root []
   (rf/clear-subscription-cache!)
