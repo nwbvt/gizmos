@@ -22,18 +22,16 @@
       (get-in db [::last-page pager-id])
       0)))
 
-(rf/reg-event-db
-  ::init-pager
-  (fn [db [_ pager-id last-page on-change]]
-    (-> db
-        (assoc-in [::last-page pager-id] last-page)
-        (assoc-in [::on-change pager-id] on-change))))
+(def last-pages (atom {}))
+
+(def on-changes (atom {}))
 
 (rf/reg-event-fx
   ::change-page
   (fn [{db :db} [_ pager-id new-page]]
-    {:db (assoc-in db [::current-page pager-id] new-page)
-     :fx [[:dispatch [(get-in db [::on-change pager-id]) new-page]]]}))
+    (let [event (@on-changes pager-id)]
+      {:db (assoc-in db [::current-page pager-id] new-page)
+     :fx [[:dispatch [event new-page]]]})))
 
 (defn- previous-button
   [pager-id]
@@ -48,7 +46,7 @@
   [pager-id]
   [:a.pagination-next
    (let [current-page @(rf/subscribe [::current-page pager-id])
-         last-page @(rf/subscribe [::last-page pager-id])]
+         last-page (@last-pages pager-id)]
      (if (= (dec last-page) current-page) {:class "is-disabled"}
        {:on-click
         #(rf/dispatch [::change-page pager-id (inc current-page)])}))
@@ -58,7 +56,7 @@
   [pager-id]
   [:ul.pagination-list
    (let [current-page @(rf/subscribe [::current-page pager-id])
-         last-page @(rf/subscribe [::last-page pager-id])]
+         last-page (@last-pages pager-id)]
      (->>
        (let [all-pages (pages-to-show current-page last-page)]
          (for [page all-pages]
@@ -79,7 +77,8 @@
   ([last-page on-change]
    (pager ::default-pager last-page on-change))
   ([pager-id last-page on-change]
-   (rf/dispatch [::init-pager pager-id last-page on-change])
+   (swap! last-pages assoc pager-id last-page)
+   (swap! on-changes assoc pager-id on-change)
    (let [current-page @(rf/subscribe [::current-page])]
     [:span
      (if (< 1 last-page)
