@@ -30,7 +30,7 @@
   [:section.section
    [:div.container
     [:div.columns
-     [:div.column.is-one-third.has-text-centered
+     [:div.column.is-one-half.has-text-centered
       [:section.hero>div.hero-body
        [:p.title "Pager"]
        [:p.subtitle "A simple paging device"]]
@@ -40,7 +40,7 @@
       [:div
        (gizmos/pager 10 ::change-page)
        [:section.hero>div.hero-body>p.title "On Page " @(rf/subscribe [::show-page])]]]
-     [:div.column.is-one-third.has-text-centered
+     [:div.column.is-one-half.has-text-centered
       [:section.hero>div.hero-body
        [:p.title "Modal"]
        [:p.subtitle "A popup modal"]]
