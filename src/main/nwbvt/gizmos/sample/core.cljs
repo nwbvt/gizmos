@@ -34,7 +34,7 @@
       [:section.hero>div.hero-body
        [:p.title "Pager"]
        [:p.subtitle "A simple paging device"]]
-      [:p.is-family-code
+      [:textarea.textarea.is-family-code {:read-only true :rows 1}
        "(gizmos/pager 10 ::change-page)"]
       [:br]
       [:div
@@ -44,6 +44,15 @@
       [:section.hero>div.hero-body
        [:p.title "Modal"]
        [:p.subtitle "A popup modal"]]
+      [:textarea.textarea.is-family-code {:read-only true :rows 7}
+"(gizmos/modal ::my-modal
+               :title \"My Modal\"
+               :body [:div \"This is a modal\"]
+               :footer [:button.button.is-primary
+                        {:on-click #(gizmos/close-modal ::my-modal)}
+                        \"Close\"]
+               :on-close ::close-my-modal)"]
+      
       [:br]
       (gizmos/modal ::my-modal
                     :title "My Modal"
