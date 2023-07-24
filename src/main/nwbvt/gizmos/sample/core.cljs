@@ -35,10 +35,10 @@
        [:p.title "Pager"]
        [:p.subtitle "A simple paging device"]]
       [:textarea.textarea.is-family-code {:read-only true :rows 1}
-       "(gizmos/pager 10 ::change-page)"]
+       "(gizmos/pager 10 6 ::change-page)"]
       [:br]
       [:div
-       (gizmos/pager 10 ::change-page)
+       (gizmos/pager 10 6 ::change-page)
        [:section.hero>div.hero-body>p.title "On Page " @(rf/subscribe [::show-page])]]]
      [:div.column.is-one-half.has-text-centered
       [:section.hero>div.hero-body
