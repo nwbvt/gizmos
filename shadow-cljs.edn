@@ -17,7 +17,11 @@
   8290 "target/browser-test"}
 
  :builds
- {:sample-app
+ {:library
+  {:target :npm-module
+   :output-dir "target/lib"
+   :entries [nwbvt.gizmos.core]}
+  :sample-app
   {:target :browser
    :output-dir "resources/public/js/compiled"
    :asset-path "/js/compiled"
