@@ -2,11 +2,16 @@
   (:require [re-frame.core :as rf]))
 
 (defn- pages-to-show
-  [page num-pages]
-  (sort (set (concat
-    (range (min num-pages 3))
-    (range (max 0 (dec page)) (min num-pages (+ 2 page)))
-    (range (max 0 (- num-pages 1)) num-pages)))))
+  [page num-pages max-pages]
+  (let [mandatory-pages
+        (set (concat
+               [0]
+               (range (max 0 (dec page)) (min num-pages (+ 2 page)))
+               [(dec num-pages)]))
+        additional-pages
+        (take (- max-pages (count mandatory-pages))
+              (remove mandatory-pages (range 0 num-pages)))]
+    (sort (concat mandatory-pages additional-pages))))
 
 (rf/reg-sub
   ::current-page
@@ -25,6 +30,8 @@
 (def last-pages (atom {}))
 
 (def on-changes (atom {}))
+
+(def max-pages-mapping (atom {}))
 
 (rf/reg-event-fx
   ::change-page
@@ -56,9 +63,10 @@
   [pager-id]
   [:ul.pagination-list
    (let [current-page @(rf/subscribe [::current-page pager-id])
-         last-page (@last-pages pager-id)]
+         last-page (@last-pages pager-id)
+         max-pages (@max-pages-mapping pager-id)]
      (->>
-       (let [all-pages (pages-to-show current-page last-page)]
+       (let [all-pages (pages-to-show current-page last-page max-pages)]
          (for [page all-pages]
            [(if (and (< 0 page) (not (some #{(dec page)} all-pages)))
               ;; Break from previous page, show elipses
@@ -74,10 +82,11 @@
        (apply concat)))])
 
 (defn pager
-  ([last-page on-change]
-   (pager ::default-pager last-page on-change))
-  ([pager-id last-page on-change]
+  ([last-page max-pages on-change]
+   (pager ::default-pager last-page max-pages on-change))
+  ([pager-id last-page max-pages on-change]
    (swap! last-pages assoc pager-id last-page)
+   (swap! max-pages-mapping assoc pager-id max-pages)
    (swap! on-changes assoc pager-id on-change)
    (let [current-page @(rf/subscribe [::current-page])]
     [:span
