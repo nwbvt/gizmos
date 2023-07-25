@@ -22,7 +22,7 @@
       {:db (assoc db
                   ::active-modal
                   nil)
-       :fx [(if on-close [:dispatch [on-close]])]})))
+       :fx [(if on-close [:dispatch on-close])]})))
 
 (defn launch-modal
   [id]

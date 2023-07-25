@@ -58,7 +58,7 @@
                     :title "My Modal"
                     :body [:div "This is a modal"]
                     :footer [:button.button.is-primary {:on-click #(gizmos/close-modal ::my-modal)} "Close"]
-                    :on-close ::close-my-modal)
+                    :on-close [::close-my-modal])
       [:button.button {:on-click #(gizmos/launch-modal ::my-modal)} "Launch Modal"]]]]])
 
 (defn ^:dev/after-load mount-root []
