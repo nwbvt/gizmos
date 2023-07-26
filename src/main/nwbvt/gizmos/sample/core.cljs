@@ -71,7 +71,12 @@
                                           :value "(gizmos/message-board ::sample-board)"}]
       [:br]
       (gizmos/message-board ::sample-board)
-      [:button.button {:on-click #(rf/dispatch [::mb/info ::sample-board "This is an informational message"])} "Add Info Message"]]]]])
+      [:div.section
+       [:button.button {:on-click #(rf/dispatch [::mb/info ::sample-board "This is an informational message"])} "Add Info Message"]
+       [:button.button {:on-click #(rf/dispatch [::mb/warn ::sample-board "This is a warning message"])} "Add Warning Message"]
+       [:button.button {:on-click #(rf/dispatch [::mb/error ::sample-board "This is an error message"])} "Add Error Message"]
+       [:button.button {:on-click #(rf/dispatch [::mb/info ::sample-board "This is an temporary message" :fade 3 :keep-for 3])} "Add Temp Message"]
+       ]]]]])
 
 (defn ^:dev/after-load mount-root []
   (rf/clear-subscription-cache!)
