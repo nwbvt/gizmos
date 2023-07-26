@@ -1,7 +1,8 @@
 (ns nwbvt.gizmos.core
   (:require [re-frame.core :as rf]
             [nwbvt.gizmos.components.pager]
-            [nwbvt.gizmos.components.modal]))
+            [nwbvt.gizmos.components.modal]
+            [nwbvt.gizmos.components.message-board]))
 
 (def pager nwbvt.gizmos.components.pager/pager)
 
@@ -10,3 +11,5 @@
 (def launch-modal nwbvt.gizmos.components.modal/launch-modal)
 
 (def close-modal nwbvt.gizmos.components.modal/close-modal)
+
+(def message-board nwbvt.gizmos.components.message-board/message-board)
