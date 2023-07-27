@@ -1,6 +1,8 @@
 (ns nwbvt.gizmos.components.message-board
   (:require [re-frame.core :as rf]))
 
+(def max-stored 100)
+
 (rf/reg-sub
   ::messages
   (fn [db [_ id]]
@@ -21,9 +23,13 @@
 
 (defn -add-message
   [db board-id message]
-  (assoc-in db
+  (if (> max-stored (apply + (map count (vals (::messages db)))))
+   (assoc-in db
             [::messages board-id (:id message)]
-            message))
+            message)
+   (do
+     (println "Too many messages have been created")
+     db)))
 
 (defn -delete-message
   [db board-id message-id]
@@ -76,10 +82,10 @@
 (defn message-board
   ([]
    (message-board :default))
-  ([id]
+  ([id & {:keys [max-messages]}]
    [:section.section
     (let [messages @(rf/subscribe [::messages id])]
-      (for [message messages]
+      (for [message (if max-messages (take max-messages messages) messages)]
         [:div.notification {:key (:id message)
                             :id (str "message" (:id message))
                             :class (case (:type message)

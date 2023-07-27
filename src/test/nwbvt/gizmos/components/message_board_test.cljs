@@ -48,4 +48,14 @@
         (is (= ["Test message" "Another message" "Test Error"]
              (map :text post-messages)))
         (is (= [1 2 4] (map :id post-messages)))
-        (is (= [10 nil nil] (map :fade post-messages)))))))
+        (is (= [10 nil nil] (map :fade post-messages)))))
+    (testing "Message limit"
+      (let  [db (loop [db {} i 0]
+                  (if (>= i mb/max-stored)
+                    db
+                    (recur (mb/-add-message db (if (= 0 (mod i 3)) ::board1 ::board2) (mb/-new-message "Lots of messages" :info)) (inc i))))]
+        (is (= mb/max-stored (+ (count (get-in db [::mb/messages ::board1]))
+                                (count (get-in db [::mb/messages ::board2])))))
+        (let [full-db (mb/-add-message db ::board1 (mb/-new-message "New message" :info))]
+          (is (= mb/max-stored (+ (count (get-in full-db [::mb/messages ::board1]))
+                                  (count (get-in full-db [::mb/messages ::board2]))))))))))

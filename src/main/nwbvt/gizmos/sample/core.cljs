@@ -70,7 +70,7 @@
       [:textarea.textarea.is-family-code {:read-only true :rows 1
                                           :value "(gizmos/message-board ::sample-board)"}]
       [:br]
-      (gizmos/message-board ::sample-board)
+      (gizmos/message-board ::sample-board :max-messages 3)
       [:div.section
        [:button.button {:on-click #(rf/dispatch [::mb/info ::sample-board "This is an informational message"])} "Add Info Message"]
        [:button.button {:on-click #(rf/dispatch [::mb/warn ::sample-board "This is a warning message"])} "Add Warning Message"]
