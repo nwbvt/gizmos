@@ -83,16 +83,17 @@
   ([]
    (message-board :default))
   ([id & {:keys [max-messages]}]
-   [:section.section
-    (let [messages @(rf/subscribe [::messages id])]
-      (for [message (if max-messages (take max-messages messages) messages)]
-        [:div.notification {:key (:id message)
-                            :id (str "message" (:id message))
-                            :class (case (:type message)
-                                     :info "is-info"
-                                     :warn "is-warning"
-                                     :error "is-danger")
-                            :style (if (:fade message) {:opacity 0
-                                                        :transition (str "opacity " (:fade message) "s linear")})}
-         [:button.delete {:on-click #(rf/dispatch [::delete-message id (:id message)])}]
-         (:text message)]))]))
+   (let [messages @(rf/subscribe [::messages id])]
+     (if (< 0 (count messages))
+       [:section.section
+        (for [message (if max-messages (take max-messages messages) messages)]
+          [:div.notification {:key (:id message)
+                              :id (str "message" (:id message))
+                              :class (case (:type message)
+                                       :info "is-info"
+                                       :warn "is-warning"
+                                       :error "is-danger")
+                              :style (if (:fade message) {:opacity 0
+                                                          :transition (str "opacity " (:fade message) "s linear")})}
+           [:button.delete {:on-click #(rf/dispatch [::delete-message id (:id message)])}]
+           (:text message)])]))))
