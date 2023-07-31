@@ -72,10 +72,10 @@
       [:br]
       (gizmos/message-board ::sample-board :max-messages 3)
       [:div.section
-       [:button.button {:on-click #(rf/dispatch [::mb/info ::sample-board "This is an informational message"])} "Add Info Message"]
-       [:button.button {:on-click #(rf/dispatch [::mb/warn ::sample-board "This is a warning message"])} "Add Warning Message"]
-       [:button.button {:on-click #(rf/dispatch [::mb/error ::sample-board "This is an error message"])} "Add Error Message"]
-       [:button.button {:on-click #(rf/dispatch [::mb/info ::sample-board "This is an temporary message" :fade 3 :keep-for 3])} "Add Temp Message"]
+       [:button.button {:on-click #(gizmos/info-message ::sample-board "This is an informational message")} "Add Info Message"]
+       [:button.button {:on-click #(gizmos/warn-message ::sample-board "This is a warning message")} "Add Warning Message"]
+       [:button.button {:on-click #(gizmos/error-message ::sample-board "This is an error message")} "Add Error Message"]
+       [:button.button {:on-click #(gizmos/info-message ::sample-board "This is an temporary message" :fade 3 :keep-for 3)} "Add Temp Message"]
        ]]]]])
 
 (defn ^:dev/after-load mount-root []
