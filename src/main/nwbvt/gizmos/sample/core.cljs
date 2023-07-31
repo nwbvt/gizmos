@@ -1,8 +1,7 @@
 (ns nwbvt.gizmos.sample.core
   (:require [reagent.dom :as rdom]
             [re-frame.core :as rf]
-            [nwbvt.gizmos.core :as gizmos]
-            [nwbvt.gizmos.components.message-board :as mb]))
+            [nwbvt.gizmos.core :as gizmos]))
 
 (rf/reg-event-fx
   ::initialize-db
