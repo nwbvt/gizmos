@@ -65,12 +65,12 @@ The message board is an area to display popup messages such as alerts.
 
 The board takes in arguments for the board id and the maximum number of messages displayed. It will also only keep up to 100 messages to prevent a memory leak.
 
-Messages can be added to the board by dispatching `nwbvt.gizmos.components.message-board/info`, `nwbvt.gizmos.components.message-board/warn`, or `nwbvt.gizmos.components.message-board/error`, events along with the board id and notification text. They can also take keyword arguments `keep-for` and `fade` which take the number of seconds to keep the notification and the number of seconds to take to fade it away for temporary messages.
+Messages can be added to the board by dispatching `nwbvt.gizmos.components.message-board/info`, `nwbvt.gizmos.components.message-board/warn`, or `nwbvt.gizmos.components.message-board/error`, events or the `info-message`, `warn-message`, or `error-message` helper functions along with the board id and notification text. They can also take keyword arguments `keep-for` and `fade` which take the number of seconds to keep the notification and the number of seconds to take to fade it away for temporary messages.
 
 ### Example
     (gizmos/message-board ::sample-board :max-messages 3)
       [:div.section
-       [:button.button {:on-click #(rf/dispatch [::mb/info ::sample-board "This is an informational message"])} "Add Info Message"]
-       [:button.button {:on-click #(rf/dispatch [::mb/warn ::sample-board "This is a warning message"])} "Add Warning Message"]
-       [:button.button {:on-click #(rf/dispatch [::mb/error ::sample-board "This is an error message"])} "Add Error Message"]
-       [:button.button {:on-click #(rf/dispatch [::mb/info ::sample-board "This is an temporary message" :fade 3 :keep-for 3])} "Add Temp Message"]]
+       [:button.button {:on-click #(gizmos/info-message ::sample-board "This is an informational message")} "Add Info Message"]
+       [:button.button {:on-click #(gizmos/warn-message ::sample-board "This is a warning message")} "Add Warning Message"]
+       [:button.button {:on-click #(gizmos/error-message ::sample-board "This is an error message")} "Add Error Message"]
+       [:button.button {:on-click #(gizmos/info-message ::sample-board "This is an temporary message" :fade 3 :keep-for 3)} "Add Temp Message"]]

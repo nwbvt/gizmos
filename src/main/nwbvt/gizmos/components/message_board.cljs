@@ -67,6 +67,18 @@
   (fn [{db :db} event]
     (-handle-add db :warn (rest event))))
 
+(defn info-message
+  [board-id message-text & options]
+  (rf/dispatch (vec (concat [::info board-id message-text] options))))
+
+(defn warn-message
+  [board-id message-text & options]
+  (rf/dispatch (vec (concat [::warn board-id message-text] options))))
+
+(defn error-message
+  [board-id message-text & options]
+  (rf/dispatch (vec (concat [::error board-id message-text] options))))
+
 (rf/reg-event-db
   ::delete-message
   (fn [db [_ board-id message-id]]

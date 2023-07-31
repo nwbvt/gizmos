@@ -13,3 +13,9 @@
 (def close-modal nwbvt.gizmos.components.modal/close-modal)
 
 (def message-board nwbvt.gizmos.components.message-board/message-board)
+
+(def info-message nwbvt.gizmos.components.message-board/info-message)
+
+(def warn-message nwbvt.gizmos.components.message-board/warn-message)
+
+(def error-message nwbvt.gizmos.components.message-board/error-message)
