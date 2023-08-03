@@ -40,7 +40,7 @@
      [:div.modal-background {:onClick close}]
      [:div.modal-card
       [:div.modal-card-head
-       [:p.modal-card-title (if (> (count title 40))
+       [:p.modal-card-title (if (> (count title) 40)
                               (str (subs title 0 40) "...")
                               title)]
        [:button.delete {:aria-label "close" :onClick close}]]
