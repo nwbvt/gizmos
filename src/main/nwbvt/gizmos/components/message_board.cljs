@@ -14,12 +14,15 @@
   [db board-id]
   (or (get-in db [::messages board-id]) []))
 
+(defn -new-message-id
+  []
+  (swap! -message-counter inc))
+
 (defn -new-message
-  [message-text message-type]
-  (let [id (swap! -message-counter inc)]
-    {:type message-type
-     :text message-text
-     :id id}))
+  [message-text message-type id]
+  {:type message-type
+   :text message-text
+   :id id})
 
 (defn -add-message
   [db board-id message]
@@ -43,14 +46,14 @@
       db)))
 
 (defn -handle-add
-  [db message-type [board-id message-text & {:keys [fade keep-for]}]]
-  (let [message (-new-message message-text message-type)
-        message-id (:id message)]
-   {:db (-add-message db board-id message)
-   :fx [(if fade
-          [:dispatch-later
-           {:ms (* 1000 (or keep-for 0))
-            :dispatch [::fade-message board-id message-id fade]}])]}))
+  [db message-type [board-id message-text & {:keys [fade keep-for id]}]]
+  (let [message-id (or id (-new-message-id))
+        message (-new-message message-text message-type message-id)]
+    {:db (-add-message db board-id message)
+     :fx [(if fade
+            [:dispatch-later
+             {:ms (* 1000 (or keep-for 0))
+              :dispatch [::fade-message board-id message-id fade]}])]}))
 
 (rf/reg-event-fx
   ::info

@@ -75,6 +75,7 @@
        [:button.button {:on-click #(gizmos/warn-message ::sample-board "This is a warning message")} "Add Warning Message"]
        [:button.button {:on-click #(gizmos/error-message ::sample-board "This is an error message")} "Add Error Message"]
        [:button.button {:on-click #(gizmos/info-message ::sample-board "This is an temporary message" :fade 3 :keep-for 3)} "Add Temp Message"]
+       [:button.button {:on-click #(gizmos/warn-message ::sample-board "This is keyed message" :id :message-key)} "Add Keyed Message"]
        ]]]]])
 
 (defn ^:dev/after-load mount-root []
