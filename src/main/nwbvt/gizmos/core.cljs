@@ -2,7 +2,8 @@
   (:require [re-frame.core :as rf]
             [nwbvt.gizmos.components.pager]
             [nwbvt.gizmos.components.modal]
-            [nwbvt.gizmos.components.message-board]))
+            [nwbvt.gizmos.components.message-board]
+            [nwbvt.gizmos.components.form]))
 
 (def pager nwbvt.gizmos.components.pager/pager)
 
