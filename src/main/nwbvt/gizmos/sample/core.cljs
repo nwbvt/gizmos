@@ -103,15 +103,11 @@
       (form/form ::sample-form
                  ;validation/form-schema
                  ::submit-form
-                 (fn []
-                  [:div
-                    (form/text-input :username "Username" 
-                                     :options {:placeholder "Enter your name"})
-                    (comment (form/select-input :sex "Sex"
-                                                :choices [{:label "Please choose"}
-                                                          {:label "Male" :value :m}
-                                                          {:label "Female" :value :f}]))
-                    (comment (form/submit-button :label "Submit" :event))]))]]]])
+                 [{:type :text :name :username :label "Username" :options {:placeholder "Enter your name"}}
+                  {:type :select :name :sex :label "Sex" :choices [{:label "Please choose"}
+                                                                   {:label "Male" :value :m}
+                                                                   {:label "Female" :value :f}]}
+                  {:type :submit :name :submit :label "Submit Form"}])]]]])
 
 (defn ^:dev/after-load mount-root []
   (rf/clear-subscription-cache!)

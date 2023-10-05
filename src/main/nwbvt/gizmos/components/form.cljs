@@ -35,20 +35,6 @@
   (fn [db [_ form field new-value]]
     (assoc-in db [::forms form field] new-value)))
 
-(defn form
-  "Defines a form"
-  ([id schema submit-event content]
-   (binding [*form* id]
-     (let [value @(rf/subscribe [::form id])]
-       [:form.form
-        {:on-submit 
-         (fn [e]
-           (.preventDefault e)
-           (rf/dispatch [::form-submitted value schema submit-event]))}
-        (content)])))
-  ([id submit-event content]
-   (form id nil submit-event content)))
-
 (defn text-input
   "Text input"
   [field label & {:keys [id options]}]
@@ -63,3 +49,28 @@
                              :on-change #(rf/dispatch [::update-field form-id field
                                                        (.. % -target -value)])}
                             options)])]))
+
+(defn form
+  "Defines a form"
+  ([id submit-event fields]
+   (form id nil submit-event fields))
+  ([id schema submit-event fields]
+   (binding [*form* id]
+     (let [value @(rf/subscribe [::form id])]
+       [:form.form
+        {:on-submit 
+         (fn [e]
+           (.preventDefault e)
+           (rf/dispatch [::form-submitted value schema submit-event]))}
+        (doall
+          (for [{field-name :name field-type :type label :label :as field} fields
+                :let [control (case field-type
+                                :text (text-input field-name label field)
+                                (.log js/console (str "Cannot render field " field)))]
+                :when control]
+            [:div.field {:key field-name}
+             control
+             ]))])))
+  )
+
+
