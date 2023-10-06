@@ -56,6 +56,11 @@
     (assoc-in db [::forms form field] new-value)))
 
 (rf/reg-event-db
+  ::populate-form
+  (fn [db [_ id value]]
+    (assoc-in db [::forms id] value)))
+
+(rf/reg-event-db
   ::set-schema
   (fn [db [_ form schema]]
     (assoc-in db [::schemas form] schema)))
@@ -95,6 +100,7 @@
           [:div.notification.is-danger error])
         [:div.control>div.select>select
         {:id id
+         :default-value value
          :on-change #(rf/dispatch [::update-field form field (.. % -target -value)])}
         (for [{:keys [value label]} choices]
           [:option {:key (or value label) :value value} label])]])]))
@@ -129,4 +135,7 @@
               :when control]
           [:div.field {:key field-name} control]))])))
 
-
+(defn populate-form
+  "Populate the values of a form"
+  [id values]
+  (rf/dispatch [::populate-form id values]))

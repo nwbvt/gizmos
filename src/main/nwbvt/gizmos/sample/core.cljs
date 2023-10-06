@@ -115,6 +115,7 @@
   (rf/clear-subscription-cache!)
   (let [root-el (.getElementById js/document "app")]
     (rdom/unmount-component-at-node root-el)
+    (gizmos/populate-form ::sample-form {:username "myusername" :sex "m"})
     (rdom/render [main] root-el)))
 
 (defn init []
