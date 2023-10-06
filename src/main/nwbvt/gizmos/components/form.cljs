@@ -22,8 +22,6 @@
 
 (def ^:dynamic *schema* nil)
 
-(def ^:dynamic *form* nil)
-
 (rf/reg-event-fx
   ::form-submitted
   (fn [{db :db} [_ form schema submit-event]]
@@ -37,29 +35,27 @@
 
 (defn text-input
   "Text input"
-  [field & {:keys [label id options]}]
+  [field form & {:keys [label id options]}]
   (let [id (or id
-               (if (nil? *form*) field
-                 (str (name *form*) "/" (name field))))]
+               (if (nil? form) field
+                 (str (name form) "/" (name field))))]
     [:div.field
      [:label.label {:for id} label]
-     (let [form-id *form*
-           value @(rf/subscribe [::field form-id field])]
+     (let [value @(rf/subscribe [::field form field])]
        [:input.input (merge {:type :text :value value :id id
-                             :on-change #(rf/dispatch [::update-field form-id field
+                             :on-change #(rf/dispatch [::update-field form field
                                                        (.. % -target -value)])}
                             options)])]))
 
 (defn select-input
   "Select box"
-  [field & {:keys [label choices]}]
+  [field form & {:keys [label choices]}]
   [:div.field
    [:label.label label]
-   (let [form-id *form*
-         value @(rf/subscribe [::field form-id field])]
+   (let [value @(rf/subscribe [::field form field])]
      [:div.control>div.select>select
       {:value value
-       :on-change #(rf/dispatch [::update-field form-id field (.. % -target -value)])}
+       :on-change #(rf/dispatch [::update-field form field (.. % -target -value)])}
       (for [{:keys [value label]} choices]
         [:option {:key (or value label) :value value} label])])])
 
@@ -74,21 +70,20 @@
   ([id submit-event fields]
    (form id nil submit-event fields))
   ([id schema submit-event fields]
-   (binding [*form* id]
-     (let [value @(rf/subscribe [::form id])]
-       [:form.form
-        {:on-submit 
-         (fn [e]
-           (.preventDefault e)
-           (rf/dispatch [::form-submitted value schema submit-event]))}
-        (doall
-          (for [[field-name {field-type :type :as field}] fields
-                :let [control (case field-type
-                                :text (text-input field-name field)
-                                :select (select-input field-name field)
-                                :submit (submit-button field-name field)
-                                (.log js/console (str "Cannot render field " field)))]
-                :when control]
-            [:div.field {:key field-name} control]))]))))
+   (let [value @(rf/subscribe [::form id])]
+     [:form.form
+      {:on-submit 
+       (fn [e]
+         (.preventDefault e)
+         (rf/dispatch [::form-submitted value schema submit-event]))}
+      (doall
+        (for [[field-name {field-type :type :as field}] fields
+              :let [control (case field-type
+                              :text (text-input field-name id field)
+                              :select (select-input field-name id field)
+                              :submit (submit-button field-name id field)
+                              (.log js/console (str "Cannot render field " field)))]
+              :when control]
+          [:div.field {:key field-name} control]))])))
 
 
