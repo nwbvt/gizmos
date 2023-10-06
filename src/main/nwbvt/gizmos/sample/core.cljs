@@ -34,7 +34,7 @@
 
 (def schema
   {:username [st/string [st/min-count 8] st/required]
-   :sex [{:message "must be male or female" :optional true :validate #{"m" "f" "none"}}]})
+   :sex [{:message "must be male or female" :validate #{"m" "f"}}]})
 
 (defn main
   []
@@ -93,14 +93,16 @@
        [:p.subtitle "A form for user input"]]
       [:textarea.textarea.is-family-code {:read-only true :rows 10
                                           :value 
-"(gizmos/form ::sample-form ::submit-form
+"(gizmos/form ::sample-form
               {:username {:type :text :label \"Username\"
                           :options {:placeholder \"Enter your name\"}}
                :sex {:type :select :label \"Sex\"
-                     :choices [{:label \"Please choose\"}
+                     :choices [{:label \"Please choose\" :value :none}
                                {:label \"Male\" :value :m}
                                {:label \"Female\" :value :f}]}
-               :submit {:type :submit :label \"Submit Form\"}})"}]
+               :submit {:type :submit :label \"Submit Form\"}}
+              ::submit-form
+              schema)"}]
       [:br]
       (gizmos/form ::sample-form
                    {:username {:type :text :label "Username" :options {:placeholder "Enter your name"}}
@@ -115,7 +117,6 @@
   (rf/clear-subscription-cache!)
   (let [root-el (.getElementById js/document "app")]
     (rdom/unmount-component-at-node root-el)
-    (gizmos/populate-form ::sample-form {:username "myusername" :sex "m"})
     (rdom/render [main] root-el)))
 
 (defn init []
