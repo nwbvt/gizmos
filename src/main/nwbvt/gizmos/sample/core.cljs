@@ -1,6 +1,7 @@
 (ns nwbvt.gizmos.sample.core
   (:require [reagent.dom :as rdom]
             [re-frame.core :as rf]
+            [struct.core :as st]
             [nwbvt.gizmos.core :as gizmos]))
 
 (rf/reg-event-fx
@@ -30,6 +31,10 @@
   (fn [_ [_ form]]
     (println "Got form" form)
     {}))
+
+(def schema
+  {:username [st/string [st/min-count 8] st/required]
+   :sex [{:message "must be male or female" :optional true :validate #{"m" "f" "none"}}]})
 
 (defn main
   []
@@ -98,12 +103,13 @@
                :submit {:type :submit :label \"Submit Form\"}})"}]
       [:br]
       (gizmos/form ::sample-form
-                   ::submit-form
                    {:username {:type :text :label "Username" :options {:placeholder "Enter your name"}}
-                    :sex {:type :select :label "Sex" :choices [{:label "Please choose"}
+                    :sex {:type :select :label "Sex" :choices [{:label "Please choose" :value :none}
                                                                {:label "Male" :value :m}
                                                                {:label "Female" :value :f}]}
-                    :submit {:type :submit :label "Submit Form"}})]]]])
+                    :submit {:type :submit :label "Submit Form"}}
+                   ::submit-form
+                   schema)]]]])
 
 (defn ^:dev/after-load mount-root []
   (rf/clear-subscription-cache!)
