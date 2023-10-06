@@ -71,9 +71,9 @@
       (if (nil? form) field
         (str (name form) "/" (name field)))))
 
-(defn text-input
+(defn basic-input
   "Text input"
-  [field form & {:keys [label id options]}]
+  [field form input-type & {:keys [label id options]}]
   (let [id (field-id form field id)]
     [:div.field
      [:label.label {:for id} label]
@@ -82,7 +82,7 @@
        [:div
         (if (nil? error) [:span]
          [:div.notification.is-danger error])
-        [:input.input (merge {:type :text :value value :id id
+        [:input.input (merge {:type input-type :value value :id id
                               :on-change #(rf/dispatch [::update-field form field
                                                         (.. % -target -value)])}
                              options)]])]))
@@ -128,10 +128,9 @@
       (doall
         (for [[field-name {field-type :type :as field}] fields
               :let [control (case field-type
-                              :text (text-input field-name id field)
                               :select (select-input field-name id field)
                               :submit (submit-button field-name id field)
-                              (.log js/console (str "Cannot render field " field)))]
+                              (basic-input field-name id field-type field))]
               :when control]
           [:div.field {:key field-name} control]))])))
 
