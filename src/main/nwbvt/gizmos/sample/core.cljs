@@ -1,6 +1,7 @@
 (ns nwbvt.gizmos.sample.core
   (:require [reagent.dom :as rdom]
             [re-frame.core :as rf]
+            [struct.core :as st]
             [nwbvt.gizmos.core :as gizmos]))
 
 (rf/reg-event-fx
@@ -24,6 +25,16 @@
   (fn [_ _]
     (println "Modal closed")
     {}))
+
+(rf/reg-event-fx
+  ::submit-form
+  (fn [_ [_ form]]
+    (println "Got form" form)
+    {}))
+
+(def schema
+  {:username [st/string [st/min-count 8] st/required]
+   :sex [{:message "must be male or female" :validate #{"m" "f"}}]})
 
 (defn main
   []
@@ -61,8 +72,7 @@
                     :footer [:button.button.is-primary {:on-click #(gizmos/close-modal ::my-modal)} "Close"]
                     :on-close [::close-my-modal])
       [:button.button {:on-click #(gizmos/launch-modal ::my-modal)} "Launch Modal"]]
-     ]
-   [:div.columns [:div.column.is-half.has-text-centered
+     [:div.column.is-half.has-text-centered
       [:section.hero>div.hero-body
        [:p.title "Message Board"]
        [:p.subtitle "A message board for alerts and things"]]
@@ -76,7 +86,32 @@
        [:button.button {:on-click #(gizmos/error-message ::sample-board "This is an error message")} "Add Error Message"]
        [:button.button {:on-click #(gizmos/info-message ::sample-board "This is an temporary message" :fade 3 :keep-for 3)} "Add Temp Message"]
        [:button.button {:on-click #(gizmos/warn-message ::sample-board "This is keyed message" :id :message-key)} "Add Keyed Message"]
-       ]]]]])
+       ]]
+     [:div.column.is-half
+      [:section.hero.has-text-centered>div.hero-body
+       [:p.title "Form"]
+       [:p.subtitle "A form for user input"]]
+      [:textarea.textarea.is-family-code {:read-only true :rows 10
+                                          :value 
+"(gizmos/form ::sample-form
+              {:username {:type :text :label \"Username\"
+                          :options {:placeholder \"Enter your name\"}}
+               :sex {:type :select :label \"Sex\"
+                     :choices [{:label \"Please choose\" :value :none}
+                               {:label \"Male\" :value :m}
+                               {:label \"Female\" :value :f}]}
+               :submit {:type :submit :label \"Submit Form\"}}
+              ::submit-form
+              schema)"}]
+      [:br]
+      (gizmos/form ::sample-form
+                   {:username {:type :text :label "Username" :options {:placeholder "Enter your name"}}
+                    :sex {:type :select :label "Sex" :choices [{:label "Please choose" :value :none}
+                                                               {:label "Male" :value :m}
+                                                               {:label "Female" :value :f}]}
+                    :submit {:type :submit :label "Submit Form"}}
+                   ::submit-form
+                   schema)]]]])
 
 (defn ^:dev/after-load mount-root []
   (rf/clear-subscription-cache!)

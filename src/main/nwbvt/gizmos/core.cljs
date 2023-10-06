@@ -2,7 +2,8 @@
   (:require [re-frame.core :as rf]
             [nwbvt.gizmos.components.pager]
             [nwbvt.gizmos.components.modal]
-            [nwbvt.gizmos.components.message-board]))
+            [nwbvt.gizmos.components.message-board]
+            [nwbvt.gizmos.components.form]))
 
 (def pager nwbvt.gizmos.components.pager/pager)
 
@@ -19,3 +20,7 @@
 (def warn-message nwbvt.gizmos.components.message-board/warn-message)
 
 (def error-message nwbvt.gizmos.components.message-board/error-message)
+
+(def form nwbvt.gizmos.components.form/form)
+
+(def populate-form nwbvt.gizmos.components.form/populate-form)
