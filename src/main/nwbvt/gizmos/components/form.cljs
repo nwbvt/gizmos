@@ -20,14 +20,6 @@
   (fn [form [_ _ field]]
     (get form field)))
 
-(def ^:dynamic *schema* nil)
-
-(rf/reg-event-fx
-  ::form-submitted
-  (fn [{db :db} [_ form schema submit-event]]
-    (if (or (nil? schema) (st/validate schema form))
-      (rf/dispatch [submit-event form]))))
-
 (rf/reg-event-db
   ::update-field
   (fn [db [_ form field new-value]]
@@ -67,23 +59,21 @@
 
 (defn form
   "Defines a form"
-  ([id submit-event fields]
-   (form id nil submit-event fields))
-  ([id schema submit-event fields]
-   (let [value @(rf/subscribe [::form id])]
-     [:form.form
-      {:on-submit 
-       (fn [e]
-         (.preventDefault e)
-         (rf/dispatch [::form-submitted value schema submit-event]))}
-      (doall
-        (for [[field-name {field-type :type :as field}] fields
-              :let [control (case field-type
-                              :text (text-input field-name id field)
-                              :select (select-input field-name id field)
-                              :submit (submit-button field-name id field)
-                              (.log js/console (str "Cannot render field " field)))]
-              :when control]
-          [:div.field {:key field-name} control]))])))
+  [id submit-event fields]
+  (let [value @(rf/subscribe [::form id])]
+    [:form.form
+     {:on-submit
+      (fn [e]
+        (.preventDefault e)
+        (rf/dispatch [submit-event value]))}
+     (doall
+       (for [[field-name {field-type :type :as field}] fields
+             :let [control (case field-type
+                             :text (text-input field-name id field)
+                             :select (select-input field-name id field)
+                             :submit (submit-button field-name id field)
+                             (.log js/console (str "Cannot render field " field)))]
+             :when control]
+         [:div.field {:key field-name} control]))]))
 
 

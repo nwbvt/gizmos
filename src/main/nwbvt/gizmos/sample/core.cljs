@@ -98,13 +98,12 @@
                :submit {:type :submit :label \"Submit Form\"}})"}]
       [:br]
       (gizmos/form ::sample-form
-                 ;validation/form-schema
-                 ::submit-form
-                 {:username {:type :text :label "Username" :options {:placeholder "Enter your name"}}
-                  :sex {:type :select :label "Sex" :choices [{:label "Please choose"}
-                                                             {:label "Male" :value :m}
-                                                             {:label "Female" :value :f}]}
-                  :submit {:type :submit :label "Submit Form"}})]]]])
+                   ::submit-form
+                   {:username {:type :text :label "Username" :options {:placeholder "Enter your name"}}
+                    :sex {:type :select :label "Sex" :choices [{:label "Please choose"}
+                                                               {:label "Male" :value :m}
+                                                               {:label "Female" :value :f}]}
+                    :submit {:type :submit :label "Submit Form"}})]]]])
 
 (defn ^:dev/after-load mount-root []
   (rf/clear-subscription-cache!)
