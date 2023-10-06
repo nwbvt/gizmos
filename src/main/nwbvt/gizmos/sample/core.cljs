@@ -1,8 +1,7 @@
 (ns nwbvt.gizmos.sample.core
   (:require [reagent.dom :as rdom]
             [re-frame.core :as rf]
-            [nwbvt.gizmos.core :as gizmos]
-            [nwbvt.gizmos.components.form :as form]))
+            [nwbvt.gizmos.core :as gizmos]))
 
 (rf/reg-event-fx
   ::initialize-db
@@ -89,25 +88,23 @@
        [:p.subtitle "A form for user input"]]
       [:textarea.textarea.is-family-code {:read-only true :rows 10
                                           :value 
-"(gizmos/form ::sample-form
-  validation/form-schema
-  [:div
-    (text-input :username :label \"Username\" 
-      :options {:placeholder \"Enter your name\"})
-    (select-input :sex :label \"Sex\"
-      :options [{:label \"Please choose\" nil}
-                {:label \"Male\" :value :m}
-                {:label \"Female\" :value :f}])
-    (submit-button :label \"Submit\" :event ::submit-form)])"}]
+"(gizmos/form ::sample-form ::submit-form
+              {:username {:type :text :label \"Username\"
+                          :options {:placeholder \"Enter your name\"}}
+               :sex {:type :select :label \"Sex\"
+                     :choices [{:label \"Please choose\"}
+                               {:label \"Male\" :value :m}
+                               {:label \"Female\" :value :f}]}
+               :submit {:type :submit :label \"Submit Form\"}})"}]
       [:br]
-      (form/form ::sample-form
+      (gizmos/form ::sample-form
                  ;validation/form-schema
                  ::submit-form
-                 [{:type :text :name :username :label "Username" :options {:placeholder "Enter your name"}}
-                  {:type :select :name :sex :label "Sex" :choices [{:label "Please choose"}
-                                                                   {:label "Male" :value :m}
-                                                                   {:label "Female" :value :f}]}
-                  {:type :submit :name :submit :label "Submit Form"}])]]]])
+                 {:username {:type :text :label "Username" :options {:placeholder "Enter your name"}}
+                  :sex {:type :select :label "Sex" :choices [{:label "Please choose"}
+                                                             {:label "Male" :value :m}
+                                                             {:label "Female" :value :f}]}
+                  :submit {:type :submit :label "Submit Form"}})]]]])
 
 (defn ^:dev/after-load mount-root []
   (rf/clear-subscription-cache!)

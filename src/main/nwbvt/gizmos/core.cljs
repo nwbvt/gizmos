@@ -20,3 +20,5 @@
 (def warn-message nwbvt.gizmos.components.message-board/warn-message)
 
 (def error-message nwbvt.gizmos.components.message-board/error-message)
+
+(def form nwbvt.gizmos.components.form/form)

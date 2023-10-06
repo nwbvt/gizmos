@@ -37,7 +37,7 @@
 
 (defn text-input
   "Text input"
-  [field label & {:keys [id options]}]
+  [field & {:keys [label id options]}]
   (let [id (or id
                (if (nil? *form*) field
                  (str (name *form*) "/" (name field))))]
@@ -49,6 +49,25 @@
                              :on-change #(rf/dispatch [::update-field form-id field
                                                        (.. % -target -value)])}
                             options)])]))
+
+(defn select-input
+  "Select box"
+  [field & {:keys [label choices]}]
+  [:div.field
+   [:label.label label]
+   (let [form-id *form*
+         value @(rf/subscribe [::field form-id field])]
+     [:div.control>div.select>select
+      {:value value
+       :on-change #(rf/dispatch [::update-field form-id field (.. % -target -value)])}
+      (for [{:keys [value label]} choices]
+        [:option {:key (or value label) :value value} label])])])
+
+(defn submit-button
+  "Submit button"
+  [field & {:keys [label]}]
+  [:div.field>div.control
+   [:input.button.is-primary {:type :submit :value label}]])
 
 (defn form
   "Defines a form"
@@ -63,14 +82,13 @@
            (.preventDefault e)
            (rf/dispatch [::form-submitted value schema submit-event]))}
         (doall
-          (for [{field-name :name field-type :type label :label :as field} fields
+          (for [[field-name {field-type :type :as field}] fields
                 :let [control (case field-type
-                                :text (text-input field-name label field)
+                                :text (text-input field-name field)
+                                :select (select-input field-name field)
+                                :submit (submit-button field-name field)
                                 (.log js/console (str "Cannot render field " field)))]
                 :when control]
-            [:div.field {:key field-name}
-             control
-             ]))])))
-  )
+            [:div.field {:key field-name} control]))]))))
 
 
