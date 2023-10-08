@@ -43,6 +43,6 @@
        [:p.modal-card-title (if (> (count title) 40)
                               (str (subs title 0 40) "...")
                               title)]
-       [:button.delete {:aria-label "close" :onClick close}]]
+       [:button.delete.close {:aria-label "close" :onClick close}]]
       [:section.modal-card-body body]
       [:footer.modal-card-foot footer]]]))
