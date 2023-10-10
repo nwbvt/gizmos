@@ -107,10 +107,11 @@
 
 (defn submit-button
   "Submit button"
-  [field form & {:keys [label]}]
-  (let [errors @(rf/subscribe [::errors form])]
+  [field form & {:keys [label id]}]
+  (let [errors @(rf/subscribe [::errors form])
+        id (field-id form field id)]
     [:div.field>div.control
-     [:input.button.is-primary {:type :submit :value label
+     [:input.button.is-primary {:type :submit :value label :id id
                                 :disabled (not (nil? errors))}]]))
 
 (defn form
