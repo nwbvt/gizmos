@@ -69,7 +69,7 @@
   [form field id]
   (or id
       (if (nil? form) field
-        (str (name form) "/" (name field)))))
+        (str (name form) "-" (name field)))))
 
 (defn basic-input
   "Text input"
