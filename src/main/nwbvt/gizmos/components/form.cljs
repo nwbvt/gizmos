@@ -81,7 +81,7 @@
            error @(rf/subscribe [::field-error form field])]
        [:div
         (if (nil? error) [:span]
-         [:div.notification.is-danger error])
+         [:div.notification.is-danger {:id (str id "-error")} error])
         [:input.input (merge {:type input-type :value value :id id
                               :on-change #(rf/dispatch [::update-field form field
                                                         (.. % -target -value)])}
@@ -97,7 +97,7 @@
            error @(rf/subscribe [::field-error form field])]
        [:div
         (if (nil? error) [:span]
-          [:div.notification.is-danger error])
+          [:div.notification.is-danger {:id (str id "-error")} error])
         [:div.control>div.select>select
         {:id id
          :default-value value
