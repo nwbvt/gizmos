@@ -111,7 +111,8 @@
   (let [errors @(rf/subscribe [::errors form])
         id (field-id form field id)]
     [:div.field>div.control
-     [:input.button.is-primary {:type :submit :value label :id id
+     [:input.button.is-primary {:type :submit :value label
+                                :id id :form form
                                 :disabled (not (nil? errors))}]]))
 
 (defn form
@@ -122,7 +123,8 @@
   ([id fields submit-event]
    (let [[errors value] @(rf/subscribe [::validated-form id])]
      [:form.form
-      {:on-submit
+      {:id id
+       :on-submit
        (fn [e]
          (.preventDefault e)
          (if (nil? errors) (rf/dispatch [submit-event value])))}
