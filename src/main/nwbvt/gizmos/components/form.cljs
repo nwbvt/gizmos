@@ -105,6 +105,17 @@
         (for [{:keys [value label]} choices]
           [:option {:key (or value label) :value value} label])]])]))
 
+(defn checkbox-input
+  "Checkbox"
+  [field form & {:keys [id label]}]
+  (let [id (field-id form field id)]
+    [:div.field
+     [:label.checkbox
+      [:input {:type :checkbox
+               :id id
+               :on-change #(rf/dispatch [::update-field form field (.. % -target -checked)])}]
+      label]]))
+
 (defn submit-button
   "Submit button"
   [field form & {:keys [label id]}]
@@ -132,6 +143,7 @@
         (for [[field-name {field-type :type :as field}] fields
               :let [control (case field-type
                               :select (select-input field-name id field)
+                              :checkbox (checkbox-input field-name id field)
                               :submit (submit-button field-name id field)
                               (basic-input field-name id field-type field))]
               :when control]
