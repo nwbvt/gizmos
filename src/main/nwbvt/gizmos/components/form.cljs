@@ -110,11 +110,17 @@
   [field form & {:keys [id label]}]
   (let [id (field-id form field id)]
     [:div.field
-     [:label.checkbox
-      [:input {:type :checkbox
-               :id id
-               :on-change #(rf/dispatch [::update-field form field (.. % -target -checked)])}]
-      label]]))
+     (let [value @(rf/subscribe [::field form field])
+           error @(rf/subscribe [::field-error form field])]
+       [:div
+        (if (nil? error) [:span]
+          [:div.notification.is-danger {:id (str id "-error")} error])
+        [:label.checkbox
+         [:input {:type :checkbox
+                  :id id
+                  :checked value
+                  :on-change #(rf/dispatch [::update-field form field (.. % -target -checked)])}]
+         label]])]))
 
 (defn submit-button
   "Submit button"
