@@ -1,7 +1,10 @@
 {
   "name": "nwbvt.gizmos",
-  "version": "0.0.1",
-  "private": true,
+  "package-name": "nwbvt.gizmos",
+  "version": "0.1.0",
+  "description": "A set of components to use in clojure reframe projects",
+  "author": "Nicholas Brown",
+  "private": false,
   "devDependencies": {
     "shadow-cljs": "2.24.1"
   },
