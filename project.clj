@@ -1,7 +1,11 @@
-(defproject nwbvt.gizmos "0.1.0-SNAPSHOT"
+(defproject net.clojars.nwbvt/gizmos "0.1.1-SNAPSHOT"
 
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "A set of components to use in clojure reframe projects"
+  :url "https://github.com/nwbvt/gizmos"
+  :license {:name "Eclipse Public License - v 1.0"
+            :url "http://www.eclipse.org/legal/epl-v10.html"
+            :distribution :repo
+            :comments "same as Clojure"}
 
   :dependencies [[reagent "1.1.1"]
                  [re-frame "1.3.0"]

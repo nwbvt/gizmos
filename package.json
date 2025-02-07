@@ -1,7 +1,7 @@
 {
   "name": "nwbvt.gizmos",
   "package-name": "nwbvt.gizmos",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A set of components to use in clojure reframe projects",
   "author": "Nicholas Brown",
   "private": false,
@@ -14,5 +14,9 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "xregexp": "^4.4.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/nwbvt/gizmos"
   }
 }
